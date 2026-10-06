@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Timagine, amenagement et entretien de parcs et jardins a Namur et environs. Devis gratuit.">
+<title>Timagine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;}
+  :root{
+    --ink:#2F2D27;
+    --ink-muted:#6B6A5F;
+    --ground:#FFFFFF;
+    --surface:#F3F5EF;
+    --surface-2:#E8EBE1;
+    --line:rgba(47,45,39,0.13);
+    --line-strong:rgba(47,45,39,0.24);
+    --sage:#AFD8A4;
+    --leaf:#5FA853;
+    --forest:#2C6B3C;
+    --forest-deep:#1E4E2B;
+    --bark:#3C2F21;
+    --focus:#1E4E2B;
+    --radius-s:4px;
+    --radius-m:8px;
+    --shadow-card:0 1px 2px rgba(47,45,39,0.06), 0 8px 24px -16px rgba(47,45,39,0.18);
+  }
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:"Newsreader",Georgia,serif;
+    font-weight:500;
+    color:var(--ink);
+    line-height:1.15;
+    margin:0 0 .5em;
+    text-wrap:balance;
+  }
+  p{margin:0 0 1em;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
+  .container{max-width:1120px;margin:0 auto;padding:0 24px;}
+  @media (max-width:640px){ .container{padding:0 20px;} }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+    min-height:48px;padding:0 24px;
+    border-radius:var(--radius-s);
+    font:600 15px/1 "Public Sans",sans-serif;
+    text-decoration:none;cursor:pointer;border:1px solid transparent;
+    transition:background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-primary{background:var(--forest);color:#fff;}
+  .btn-primary:hover{background:var(--forest-deep);}
+  .btn-outline{background:transparent;color:var(--forest);border-color:var(--forest);}
+  .btn-outline:hover{background:var(--forest);color:#fff;}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--ink);}
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1120px;margin:0 auto;padding:0 24px;
+    height:76px;display:flex;align-items:center;gap:32px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0;}
+  .brand-mark{width:34px;height:34px;flex-shrink:0;}
+  .brand-text{font-family:"Newsreader",serif;font-size:21px;font-weight:500;letter-spacing:.01em;}
+  .main-nav{display:flex;gap:28px;margin-left:8px;flex:1;}
+  .main-nav a{
+    font-size:15px;color:var(--ink-muted);text-decoration:none;
+    padding:8px 2px;border-bottom:2px solid transparent;
+  }
+  .main-nav a:hover{color:var(--ink);}
+  .header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;}
+  .nav-call{display:flex;}
+  .nav-toggle{
+    display:none;width:44px;height:44px;border:1px solid var(--line-strong);
+    border-radius:var(--radius-s);background:transparent;cursor:pointer;
+    flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  }
+  .nav-toggle span{width:20px;height:2px;background:var(--ink);display:block;}
+  @media (max-width:880px){
+    .main-nav{
+      position:fixed;top:76px;left:0;right:0;bottom:0;
+      background:var(--ground);flex-direction:column;gap:0;
+      padding:8px 24px 32px;margin:0;
+      transform:translateY(-8px);opacity:0;pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+    }
+    .main-nav.is-open{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .main-nav a{padding:16px 0;border-bottom:1px solid var(--line);font-size:17px;width:100%;}
+    .nav-call{display:none;}
+    .nav-toggle{display:flex;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:640px;
+    display:flex;align-items:flex-end;
+    background:
+      linear-gradient(180deg, rgba(20,28,18,0.15) 0%, rgba(17,24,15,0.62) 78%, rgba(14,20,12,0.74) 100%),
+      url('hero-garden.jpg') center 38%/cover no-repeat;
+  }
+  .hero-inner{
+    position:relative;width:100%;
+    max-width:1120px;margin:0 auto;padding:64px 24px 56px;
+    color:#fff;
+  }
+  .hero-kicker{
+    font:600 13px/1 "Public Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--sage);margin:0 0 18px;
+  }
+  .hero h1{color:#fff;font-size:clamp(2.6rem,5.6vw,4.2rem);margin-bottom:.3em;}
+  .hero-sub{color:rgba(255,255,255,0.88);font-size:1.15rem;max-width:34em;margin-bottom:28px;}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .hero .btn-ghost{color:#fff;border-color:rgba(255,255,255,0.55);}
+  .hero .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,0.12);}
+
+  /* ---------- Sections ---------- */
+  .section{padding:96px 0;}
+  @media (max-width:640px){ .section{padding:64px 0;} }
+  .section-alt{background:var(--surface);}
+  .kicker{
+    font:600 13px/1 "Public Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--forest);margin:0 0 14px;
+  }
+  .section-head{max-width:640px;margin:0 0 48px;}
+  .section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.3rem);}
+  .section-head p{color:var(--ink-muted);font-size:1.05rem;margin:0;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:72px;align-items:center;}
+  @media (max-width:880px){ .two-col{grid-template-columns:1fr;gap:40px;} }
+
+  .intro-figures{display:flex;gap:40px;margin-top:36px;flex-wrap:wrap;}
+  .figure dd{font-family:"Newsreader",serif;font-size:2.1rem;color:var(--forest);margin:0;}
+  .figure dt{font-size:13px;color:var(--ink-muted);margin:4px 0 0;}
+
+  .intro-photo{
+    position:relative;border-radius:var(--radius-m);overflow:hidden;
+    aspect-ratio:4/5;background:var(--surface-2);
+  }
+  .intro-photo img{width:100%;height:100%;object-fit:cover;}
+  .intro-photo-tag{
+    position:absolute;left:16px;bottom:16px;background:var(--ground);
+    padding:10px 16px;border-radius:var(--radius-s);box-shadow:var(--shadow-card);
+    font-size:13px;color:var(--ink-muted);
+  }
+  .intro-photo-tag strong{color:var(--ink);display:block;font-family:"Newsreader",serif;font-size:16px;}
+
+  /* ---------- Services ---------- */
+  .services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius-m);overflow:hidden;}
+  @media (max-width:880px){ .services-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .services-grid{grid-template-columns:1fr;} }
+  .service-card{background:var(--ground);padding:36px 28px;}
+  .service-icon{width:40px;height:40px;color:var(--forest);margin-bottom:20px;}
+  .service-card h3{font-size:1.2rem;margin-bottom:.4em;}
+  .service-card p{color:var(--ink-muted);font-size:14.5px;margin-bottom:16px;}
+  .service-list{list-style:none;margin:0;padding:0;font-size:14px;color:var(--ink-muted);}
+  .service-list li{padding:6px 0;border-top:1px solid var(--line);}
+  .service-list li:first-child{border-top:none;}
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:760px){ .gallery-grid{grid-template-columns:1fr 1fr;} }
+  .gallery-tile{position:relative;aspect-ratio:3/4;border-radius:var(--radius-m);overflow:hidden;background:var(--surface-2);}
+  .gallery-tile img{width:100%;height:100%;object-fit:cover;}
+  .gallery-cap{
+    position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;
+    background:linear-gradient(180deg, rgba(18,24,15,0) 0%, rgba(14,20,12,0.72) 100%);
+    color:#fff;font-size:13px;font-weight:600;letter-spacing:.02em;
+  }
+
+  /* ---------- Trust ---------- */
+  .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+  @media (max-width:760px){ .trust-grid{grid-template-columns:1fr;gap:32px;} }
+  .trust-icon{width:34px;height:34px;color:var(--forest);margin-bottom:16px;}
+  .trust-item h3{font-size:1.1rem;}
+  .trust-item p{color:var(--ink-muted);font-size:14.5px;margin:0;}
+
+  /* ---------- Process ---------- */
+  .process-list{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .process-item{
+    counter-increment:step;
+    display:grid;grid-template-columns:48px 1fr;gap:20px;
+    padding:24px 0;border-top:1px solid var(--line);
+  }
+  .process-item:last-child{border-bottom:1px solid var(--line);}
+  .process-item::before{
+    content:counter(step,decimal-leading-zero);
+    font-family:"Newsreader",serif;font-size:1.1rem;color:var(--forest);
+  }
+  .process-item h3{font-size:1.05rem;margin-bottom:.25em;}
+  .process-item p{color:var(--ink-muted);font-size:14.5px;margin:0;}
+
+  /* ---------- Map ---------- */
+  .map-frame{border-radius:var(--radius-m);overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;background:var(--surface-2);}
+  .map-frame iframe{width:100%;height:100%;border:0;display:block;}
+  .map-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:16px;flex-wrap:wrap;}
+  .map-caption{color:var(--ink-muted);font-size:14px;margin:0;}
+
+  /* ---------- Contact ---------- */
+  .contact-list{list-style:none;margin:0 0 32px;padding:0;}
+  .contact-list li{padding:16px 0;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-muted);}
+  .contact-list li:first-child{border-top:none;}
+  .contact-list strong{display:block;color:var(--ink);font-family:"Newsreader",serif;font-size:17px;font-weight:500;margin-bottom:2px;}
+  .contact-list a{text-decoration:none;}
+  .contact-list a:hover{text-decoration:underline;}
+
+  .form-field{margin-bottom:18px;}
+  .form-field label{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:6px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:520px){ .form-row{grid-template-columns:1fr;} }
+  .form-field input,.form-field textarea{
+    width:100%;min-height:48px;padding:0 14px;
+    border:1px solid var(--line-strong);border-radius:var(--radius-s);
+    font:400 15px/1.4 "Public Sans",sans-serif;color:var(--ink);background:var(--ground);
+  }
+  .form-field textarea{min-height:104px;padding:12px 14px;resize:vertical;}
+  .form-field input:focus,.form-field textarea:focus{outline:3px solid var(--focus);outline-offset:1px;border-color:var(--forest);}
+  .form-note{font-size:13.5px;color:var(--ink-muted);margin-top:14px;}
+
+  /* ---------- Footer ---------- */
+  .site-footer{background:var(--bark);color:#E9E4D6;padding:56px 0 32px;}
+  .footer-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding-bottom:32px;border-bottom:1px solid rgba(233,228,214,0.18);}
+  .footer-brand{display:flex;align-items:center;gap:10px;font-family:"Newsreader",serif;font-size:19px;margin-bottom:10px;}
+  .footer-brand svg{width:26px;height:26px;}
+  .footer-col p{color:rgba(233,228,214,0.72);font-size:14px;margin:0 0 6px;}
+  .footer-col a{color:#E9E4D6;text-decoration:none;}
+  .footer-col a:hover{text-decoration:underline;}
+  .footer-legal{color:rgba(233,228,214,0.5);font-size:12.5px;margin:20px 0 0;}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="16" cy="18" r="10" fill="var(--sage)"/>
+        <circle cx="26" cy="14" r="9" fill="var(--leaf)"/>
+        <circle cx="33" cy="20" r="7" fill="var(--forest)"/>
+        <path d="M16 24 V38 M12 30 L16 34 L20 30 M26 20 V38 M22 27 L26 31 L30 27" stroke="var(--bark)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-text">Timagine</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="#propos">À propos</a>
+      <a href="#services">Services</a>
+      <a href="#realisations">Réalisations</a>
+      <a href="#zone">Zone</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a href="tel:+32470815702" class="btn btn-ghost nav-call">0470 81 57 02</a>
+      <a href="#contact" class="btn btn-primary">Demander un devis</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <p class="hero-kicker">Aménagement &amp; entretien de parcs et jardins — région de Namur</p>
+    <h1>Végétalisez vos idées</h1>
+    <p class="hero-sub">Timothée Bronchain conçoit, réalise et entretient vos espaces verts à Namur et dans les communes voisines : création de jardin, taille, élagage et lutte naturelle contre les taupes.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Demander un devis gratuit</a>
+      <a href="#services" class="btn btn-ghost">Voir les services</a>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <section class="section" id="propos">
+    <div class="container two-col">
+      <div>
+        <p class="kicker">L'entreprise</p>
+        <h2>Un seul interlocuteur, du premier coup de bêche à l'entretien annuel</h2>
+        <p>Timagine accompagne les particuliers de la région namuroise sur l'ensemble de leurs espaces extérieurs : conception de massifs et de haies, entretien courant, travaux forestiers en hauteur et traitement naturel des taupinières.</p>
+        <p>Chaque chantier commence par une visite sur place. Timothée évalue le terrain, écoute le projet et propose un devis gratuit, sans engagement, avant toute intervention.</p>
+        <dl class="intro-figures">
+          <div class="figure"><dd>4</dd><dt>domaines d'intervention</dt></div>
+          <div class="figure"><dd>100%</dd><dt>devis gratuits</dt></div>
+          <div class="figure"><dd>48h</dd><dt>délai de réponse moyen</dt></div>
+        </dl>
+      </div>
+      <div class="intro-photo">
+        <img src="card-en.jpg" alt="Taille de haie sur échafaudage par Timagine" loading="lazy">
+        <div class="intro-photo-tag"><strong>Entretien</strong>Taille de haie, région de Namur</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="services">
+    <div class="container">
+      <div class="section-head center">
+        <p class="kicker">Ce que fait Timagine</p>
+        <h2>Quatre domaines, une seule équipe</h2>
+        <p>De la création d'un massif à l'abattage d'un arbre, en passant par l'entretien courant et la lutte contre les taupes.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M20 34V18" stroke-linecap="round"/>
+            <path d="M20 22c-6 0-9-4-9-9 5 0 9 3 9 7" stroke-linejoin="round"/>
+            <path d="M20 18c6 0 9-5 9-10-6 0-10 4-10 8" stroke-linejoin="round"/>
+            <path d="M12 34h16" stroke-linecap="round"/>
+          </svg>
+          <h3>Aménagement</h3>
+          <p>Conception et réalisation de jardins, haies, clôtures et allées sur mesure.</p>
+          <ul class="service-list">
+            <li>Création de massif et pelouse</li>
+            <li>Plantation de haies et d'arbres</li>
+            <li>Clôture en châtaignier</li>
+            <li>Pavage, bordures, gravier</li>
+          </ul>
+        </article>
+
+        <article class="service-card">
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M8 10l9 9M31 10l-9 9" stroke-linecap="round"/>
+            <circle cx="8" cy="8" r="2.4"/>
+            <circle cx="31" cy="8" r="2.4"/>
+            <path d="M20 19v15" stroke-linecap="round"/>
+            <path d="M14 30h12" stroke-linecap="round"/>
+          </svg>
+          <h3>Entretien</h3>
+          <p>Tailles, tontes et soins réguliers pour préserver vos espaces verts.</p>
+          <ul class="service-list">
+            <li>Taille de haies et d'arbrisseaux</li>
+            <li>Tonte occasionnelle</li>
+            <li>Scarification, désherbage</li>
+            <li>Apport d'engrais</li>
+          </ul>
+        </article>
+
+        <article class="service-card">
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M20 35V17" stroke-linecap="round"/>
+            <path d="M20 23c-7 0-11-5-11-12 6 0 11 4 11 9" stroke-linejoin="round"/>
+            <path d="M20 19c6 0 10-4 10-10-6 0-10 4-10 8" stroke-linejoin="round"/>
+            <path d="M11 35h18" stroke-linecap="round"/>
+          </svg>
+          <h3>Forestier</h3>
+          <p>Abattage, élagage et diagnostic sanitaire, du conseil à la valorisation du bois.</p>
+          <ul class="service-list">
+            <li>Abattage et démontage</li>
+            <li>Élagage, taille raisonnée</li>
+            <li>Diagnostic sanitaire</li>
+            <li>Broyage et évacuation</li>
+          </ul>
+        </article>
+
+        <article class="service-card">
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M8 27c3-9 21-9 24 0" stroke-linecap="round"/>
+            <ellipse cx="20" cy="28" rx="13" ry="4"/>
+            <path d="M16 20l-2-4M24 20l2-4M20 19v-5" stroke-linecap="round"/>
+          </svg>
+          <h3>Taupe</h3>
+          <p>Démoussage naturel des taupinières, sans produit chimique.</p>
+          <ul class="service-list">
+            <li>Méthode respectueuse du vivant</li>
+            <li>Adapté parcs et jardins</li>
+            <li>Résultat rapide</li>
+            <li>Offre à prix réduit</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="realisations">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Réalisations</p>
+        <h2>Quatre chantiers récents, en image</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-tile">
+          <img src="hero-garden.jpg" alt="Chantier d'aménagement : pose de clôture et création de massif" loading="lazy">
+          <span class="gallery-cap">Aménagement</span>
+        </div>
+        <div class="gallery-tile">
+          <img src="card-en.jpg" alt="Taille de haie sur échafaudage" loading="lazy">
+          <span class="gallery-cap">Entretien</span>
+        </div>
+        <div class="gallery-tile">
+          <img src="card-fo.jpg" alt="Élagueur en intervention dans un arbre" loading="lazy">
+          <span class="gallery-cap">Forestier</span>
+        </div>
+        <div class="gallery-tile">
+          <img src="card-ta.jpg" alt="Taupinières traitées dans une pelouse" loading="lazy">
+          <span class="gallery-cap">Taupe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="pourquoi">
+    <div class="container">
+      <div class="section-head center">
+        <p class="kicker">Pourquoi Timagine</p>
+        <h2>Une entreprise à taille humaine</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 20V8l10-4 10 4v12" stroke-linejoin="round"/><path d="M6 20l10 4 10-4" stroke-linejoin="round"/><path d="M16 4v20" /></svg>
+          <h3>Sur mesure</h3>
+          <p>Chaque chantier est étudié sur place, du premier échange à la dernière taille.</p>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="9" width="22" height="16" rx="2"/><path d="M5 14h22M11 9V6M21 9V6" stroke-linecap="round"/></svg>
+          <h3>Sans engagement</h3>
+          <p>Devis gratuit sous 48h, sans obligation de donner suite.</p>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M16 27c7-4 11-9 11-15a7 7 0 0 0-11-5 7 7 0 0 0-11 5c0 6 4 11 11 15z" stroke-linejoin="round"/></svg>
+          <h3>Respect du vivant</h3>
+          <p>Méthodes respectueuses de la nature, y compris contre les taupes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="demarche">
+    <div class="container two-col">
+      <div>
+        <p class="kicker">La démarche</p>
+        <h2>De la demande au chantier</h2>
+        <p>Quatre étapes simples, du premier appel à l'entretien dans la durée.</p>
+      </div>
+      <ol class="process-list">
+        <li class="process-item"><div><h3>Contact</h3><p>Par téléphone ou e-mail, 7j/7.</p></div></li>
+        <li class="process-item"><div><h3>Visite &amp; diagnostic</h3><p>Étude du terrain et des besoins sur place.</p></div></li>
+        <li class="process-item"><div><h3>Devis gratuit</h3><p>Offre détaillée, sans engagement, sous 48h.</p></div></li>
+        <li class="process-item"><div><h3>Réalisation &amp; suivi</h3><p>Chantier soigné, puis entretenu dans la durée.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="zone">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Zone d'intervention</p>
+        <h2>Namur et les communes environnantes</h2>
+      </div>
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps?q=Namur,+Belgique&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Carte Google Maps — Namur et environs"></iframe>
+      </div>
+      <div class="map-footer">
+        <p class="map-caption">Namur, Jambes, Wépion, Profondeville et alentours.</p>
+        <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Namur%2C+Belgique" target="_blank" rel="noopener">Ouvrir dans Google Maps ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container two-col">
+      <div>
+        <p class="kicker">Contact</p>
+        <h2>Demandez votre devis</h2>
+        <ul class="contact-list">
+          <li><strong>Timothée Bronchain</strong>Namur et environs · BE 1017 554 051</li>
+          <li><strong>Téléphone</strong><a href="tel:+32470815702">0470 81 57 02</a></li>
+          <li><strong>E-mail</strong><a href="mailto:timagine.info@gmail.com">timagine.info@gmail.com</a></li>
+          <li><strong>Horaires</strong>Lun–Sam · 7h30–18h30</li>
+        </ul>
+      </div>
+      <div>
+        <form id="devis-form">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="f-nom">Nom complet</label>
+              <input type="text" id="f-nom" name="nom" required>
+            </div>
+            <div class="form-field">
+              <label for="f-tel">Téléphone</label>
+              <input type="tel" id="f-tel" name="telephone" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="f-service">Type de demande</label>
+            <input type="text" id="f-service" name="service" placeholder="Aménagement, entretien, forestier, taupe...">
+          </div>
+          <div class="form-field">
+            <label for="f-message">Message</label>
+            <textarea id="f-message" name="message" placeholder="Décrivez votre projet ou votre besoin"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Envoyer la demande</button>
+          <p class="form-note" id="form-note" hidden>Merci ! Cette page de démonstration n'envoie pas encore la demande — appelez le 0470 81 57 02 pour en discuter directement.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <p class="footer-brand">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="16" cy="18" r="10" fill="#AFD8A4"/><circle cx="26" cy="14" r="9" fill="#5FA853"/><circle cx="33" cy="20" r="7" fill="#2C6B3C"/></svg>
+          Timagine
+        </p>
+        <p>Namur et environs, Belgique</p>
+        <p>BE 1017 554 051</p>
+      </div>
+      <div class="footer-col">
+        <p><a href="tel:+32470815702">0470 81 57 02</a></p>
+        <p><a href="mailto:timagine.info@gmail.com">timagine.info@gmail.com</a></p>
+        <p>Lun–Sam · 7h30–18h30</p>
+      </div>
+    </div>
+    <p class="footer-legal">Site réalisé pour Timagine — Timothée Bronchain.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var toggle = document.getElementById('nav-toggle');
+  var nav = document.getElementById('main-nav');
+  if(toggle && nav){
+    toggle.addEventListener('click', function(){
+      var open = nav.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        nav.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  var form = document.getElementById('devis-form');
+  var note = document.getElementById('form-note');
+  if(form && note){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      note.hidden = false;
+    });
+  }
+})();
+</script>
+</body>
+</html>
