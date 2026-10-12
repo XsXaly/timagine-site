@@ -152,22 +152,14 @@
   /* ---------- Services ---------- */
   .services{background:var(--sauge);}
   .services .section-intro{color:var(--ink-soft);}
-  .service-list{display:grid;grid-template-columns:repeat(4,1fr);gap:48px 36px;margin-top:64px;}
-  @media (max-width:1060px){ .service-list{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:600px){ .service-list{grid-template-columns:1fr;gap:56px;} }
-  .service-photo{width:100%;max-width:240px;aspect-ratio:10/13;border-radius:50%;overflow:hidden;background:var(--tilleul);margin-bottom:28px;}
+  .service-list{display:grid;grid-template-columns:repeat(4,1fr);gap:48px 28px;margin-top:64px;}
+  @media (max-width:1060px){ .service-list{grid-template-columns:repeat(2,1fr);gap:52px 32px;} }
+  @media (max-width:600px){ .service-list{grid-template-columns:1fr;gap:48px;} }
+  .service-photo{aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:var(--tilleul);margin-bottom:24px;}
   .service-photo img{width:100%;height:100%;object-fit:cover;}
+  @media (max-width:600px){ .service-photo{aspect-ratio:3/2;margin-bottom:20px;} }
   .service h3{font-size:1.6rem;line-height:1.15;margin-bottom:12px;}
   .service p{font-size:16px;color:var(--ink-soft);}
-  @media (max-width:1060px){
-    .service{display:grid;grid-template-columns:150px 1fr;gap:0 24px;align-items:start;}
-    .service-photo{margin-bottom:0;grid-row:span 2;}
-    .service h3{font-size:1.45rem;margin-top:10px;}
-  }
-  @media (max-width:600px){
-    .service{grid-template-columns:104px 1fr;gap:0 18px;}
-    .service h3{font-size:1.35rem;margin-top:4px;}
-  }
 
   /* ---------- Chantiers ---------- */
   .chantiers{background:var(--sapin);color:#DCEBD5;}
@@ -280,10 +272,53 @@
     .action-bar .btn{min-height:52px;padding:0 12px;}
   }
 
-  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
+  /* ---------- Transitions au défilement ----------
+     Le contenu reste visible sans JavaScript : la classe .anim n'est posée
+     que si le navigateur sait animer et que la personne n'a pas demandé
+     moins d'animations. Seuls transform et opacity bougent. */
+  .anim .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+  .anim .reveal.is-in{opacity:1;transform:none;}
+  .anim .reveal-photo{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);}
+  .anim .reveal-photo img{transform:scale(1.12);transition:transform 1.3s cubic-bezier(.2,.7,.2,1);}
+  .anim .reveal-photo.is-in{opacity:1;transform:none;}
+  .anim .reveal-photo.is-in img{transform:none;}
+
+  /* À l'ouverture, les trois houppiers poussent l'un après l'autre, comme dans le logo */
+  @keyframes pousse{from{opacity:0;transform:scale(.82);}to{opacity:1;transform:none;}}
+  @keyframes monte{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: no-preference){
+    .crown-a{animation:pousse .9s cubic-bezier(.2,.7,.2,1) both;transform-origin:50% 100%;}
+    .crown-b{animation:pousse .9s cubic-bezier(.2,.7,.2,1) .12s both;transform-origin:50% 100%;}
+    .crown-photo{animation:pousse 1s cubic-bezier(.2,.7,.2,1) .25s both;}
+    .hero-grid > div:first-child > *{animation:monte .8s cubic-bezier(.2,.7,.2,1) both;}
+    .hero-grid > div:first-child > :nth-child(2){animation-delay:.08s;}
+    .hero-grid > div:first-child > :nth-child(3){animation-delay:.16s;}
+    .hero-grid > div:first-child > :nth-child(4){animation-delay:.24s;}
+    .hero-grid > div:first-child > :nth-child(5){animation-delay:.32s;}
+  }
+  /* « Réduire les animations » activé : plus aucun mouvement, seulement des fondus */
+  @keyframes fondu{from{opacity:0;}to{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .anim .reveal,.anim .reveal-photo{transform:none;transition:opacity .6s ease;}
+    .anim .reveal-photo img{transform:none;transition:none;}
+    .crowns,.hero-grid > div:first-child{animation:fondu .7s ease both;}
+  }
+  @media print{ .anim .reveal,.anim .reveal-photo{opacity:1 !important;transform:none !important;} }
 </style>
 </head>
 <body>
+<script>
+  // Active les transitions avant l'affichage ; si le script principal ne démarre pas, tout redevient visible.
+  // Avec « Réduire les animations », le CSS remplace les mouvements par des fondus.
+  (function(){
+    var d = document.documentElement;
+    if('IntersectionObserver' in window){
+      d.classList.add('anim');
+      setTimeout(function(){ if(!window.__revealPret){ d.classList.remove('anim'); } }, 2500);
+    }
+  })();
+</script>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-star" viewBox="0 0 20 20"><path fill="currentColor" d="M10 1.6l2.47 5.3 5.8.68-4.28 3.97 1.13 5.73L10 14.4l-5.12 2.88 1.13-5.73L1.73 7.58l5.8-.68z"/></symbol>
@@ -353,25 +388,25 @@
 
   <section class="section services" id="services" aria-labelledby="services-title">
     <div class="container">
-      <h2 id="services-title">Ce que je fais</h2>
-      <p class="section-intro">Chaque chantier commence par une visite sur place. On regarde le terrain ensemble, et je vous explique ce que je propose avant de chiffrer quoi que ce soit.</p>
-      <div class="service-list">
-        <article class="service">
+      <h2 id="services-title" class="reveal">Ce que je fais</h2>
+      <p class="section-intro reveal">Chaque chantier commence par une visite sur place. On regarde le terrain ensemble, et je vous explique ce que je propose avant de chiffrer quoi que ce soit.</p>
+      <div class="service-list" data-stagger>
+        <article class="service reveal">
           <div class="service-photo"><img src="img/amenagement.webp" width="1100" height="825" alt="Massif planté de verveines et de graminées au bord d'une pelouse" loading="lazy"></div>
           <h3>Aménagement</h3>
           <p>Je crée massifs, pelouses et haies, et je plante arbres d'ornement et fruitiers. Je pose aussi des clôtures en châtaignier, des pavés et des bordures en acier corten.</p>
         </article>
-        <article class="service">
+        <article class="service reveal">
           <div class="service-photo"><img src="img/entretien.webp" width="750" height="1000" alt="Haie de laurier taillée au cordeau le long d'une pelouse" loading="lazy"></div>
           <h3>Entretien</h3>
           <p>Taille des haies, des arbustes et des fruitiers, tonte, scarification et désherbage. Je passe pour une intervention ponctuelle ou tout au long de l'année.</p>
         </article>
-        <article class="service">
+        <article class="service reveal">
           <div class="service-photo"><img src="img/elagage.webp" width="750" height="1000" alt="Arbre au houppier allégé après une taille raisonnée" loading="lazy" style="object-position:50% 30%"></div>
           <h3>Élagage et abattage</h3>
           <p>Je grimpe encordé pour élaguer, démonter ou abattre un arbre, puis je broie ou j'évacue le bois. Après une tempête, je dégage aussi les arbres tombés.</p>
         </article>
-        <article class="service">
+        <article class="service reveal">
           <div class="service-photo"><img src="img/taupes.jpg" width="420" height="420" alt="Pelouse parsemée de taupinières" loading="lazy"></div>
           <h3>Taupes</h3>
           <p>Je traite les taupinières avec une méthode naturelle, sans produit chimique, dans les jardins comme dans les parcs.</p>
@@ -382,26 +417,26 @@
 
   <section class="section chantiers on-dark" id="chantiers" aria-labelledby="chantiers-title">
     <div class="container">
-      <h2 id="chantiers-title">Quelques chantiers récents</h2>
-      <p class="section-intro">Des photos prises sur mes chantiers en Wallonie.</p>
-      <div class="bento">
-        <figure>
+      <h2 id="chantiers-title" class="reveal">Quelques chantiers récents</h2>
+      <p class="section-intro reveal">Des photos prises sur mes chantiers en Wallonie.</p>
+      <div class="bento" data-stagger>
+        <figure class="reveal-photo">
           <img src="img/haie-lilas.webp" width="900" height="1200" alt="Haie de laurier entretenue sous des lilas en fleurs" loading="lazy">
           <figcaption>Haie de laurier sous les lilas</figcaption>
         </figure>
-        <figure>
+        <figure class="reveal-photo">
           <img src="img/rognage-souche.webp" width="675" height="900" alt="Rogneuse de souches au travail dans un jardin" loading="lazy">
           <figcaption>Rognage d'une souche</figcaption>
         </figure>
-        <figure>
+        <figure class="reveal-photo">
           <img src="img/abattage.webp" width="900" height="675" alt="Troncs abattus au sol dans un sous-bois clôturé de châtaignier" loading="lazy">
           <figcaption>Abattage en sous-bois</figcaption>
         </figure>
-        <figure>
+        <figure class="reveal-photo">
           <img src="img/bois-debite.webp" width="900" height="675" alt="Bois débité et empilé après un abattage" loading="lazy">
           <figcaption>Bois débité, prêt à partir</figcaption>
         </figure>
-        <figure>
+        <figure class="reveal-photo">
           <img src="img/arbre-mort.webp" width="675" height="900" alt="Tronc d'arbre mort démonté au bord d'un chemin forestier" loading="lazy" style="object-position:50% 60%">
           <figcaption>Arbre mort démonté</figcaption>
         </figure>
@@ -411,18 +446,18 @@
 
   <section class="section avis" id="avis" aria-labelledby="avis-title">
     <div class="container">
-      <h2 id="avis-title">Ce qu'en disent mes clients</h2>
-      <div class="quotes">
-        <figure class="quote">
+      <h2 id="avis-title" class="reveal">Ce qu'en disent mes clients</h2>
+      <div class="quotes" data-stagger>
+        <figure class="quote reveal">
           <blockquote>« Merci à Timagine pour la réactivité et l'excellent travail accompli en urgence. Une voie agricole bloquée par 4 arbres tombés suite à la tempête. Voie libérée dimanche soir malgré un programme déjà chargé. »</blockquote>
           <figcaption>Mieke V., sur Google <span class="stars" role="img" aria-label="5 étoiles sur 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></span></figcaption>
         </figure>
-        <figure class="quote">
+        <figure class="quote reveal">
           <blockquote>« Excellent travail, effectué dans les délais avec rapidité et efficacité ! »</blockquote>
           <figcaption>Claire A., sur Google <span class="stars" role="img" aria-label="5 étoiles sur 5"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></span></figcaption>
         </figure>
       </div>
-      <div class="avis-foot">
+      <div class="avis-foot reveal">
         <strong>5,0 sur 5 sur Google</strong>
         <a href="https://search.google.com/local/reviews?placeid=ChIJ0yneg0BzTkERG25A8Kq_fhM" target="_blank" rel="noopener">Lire les avis sur Google</a>
         <a href="https://search.google.com/local/writereview?placeid=ChIJ0yneg0BzTkERG25A8Kq_fhM" target="_blank" rel="noopener">Vous avez travaillé avec moi ? Laissez un avis</a>
@@ -432,8 +467,8 @@
 
   <section class="section" id="contact" aria-labelledby="contact-title">
     <div class="container">
-      <div class="contact-grid">
-        <div>
+      <div class="contact-grid" data-stagger>
+        <div class="reveal">
           <h2 id="contact-title">Demandez votre devis gratuit</h2>
           <p class="contact-lead">Le plus simple, c'est de m'appeler.</p>
           <a class="contact-phone" href="tel:+32470815702"><svg aria-hidden="true"><use href="#i-phone"/></svg>0470 81 57 02</a>
@@ -451,7 +486,7 @@
           </div>
         </div>
 
-        <div class="form-card">
+        <div class="form-card reveal">
           <h3>Écrivez-moi</h3>
           <p>Remplissez ces quelques champs : votre messagerie s'ouvre avec la demande déjà rédigée, il ne vous reste qu'à l'envoyer.</p>
           <form id="devis-form" novalidate>
@@ -495,7 +530,7 @@
         </div>
       </div>
 
-      <div class="map" id="map">
+      <div class="map reveal" id="map">
         <div class="map-gate">
           <span class="map-pin" aria-hidden="true"><svg><use href="#i-pin"/></svg></span>
           <div class="map-text">
@@ -548,6 +583,22 @@
 
 <script>
 (function(){
+  // Transitions au défilement : chaque élément apparaît une fois, en léger décalé dans son groupe
+  if(document.documentElement.classList.contains('anim')){
+    document.querySelectorAll('[data-stagger]').forEach(function(groupe){
+      groupe.querySelectorAll(':scope > .reveal, :scope > .reveal-photo').forEach(function(el, i){
+        el.style.transitionDelay = (i * 90) + 'ms';
+      });
+    });
+    var vu = new IntersectionObserver(function(entrees){
+      entrees.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('is-in'); vu.unobserve(e.target); }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal, .reveal-photo').forEach(function(el){ vu.observe(el); });
+    window.__revealPret = true;
+  }
+
   var header = document.getElementById('top');
   var onScroll = function(){ header.classList.toggle('is-scrolled', window.scrollY > 8); };
   window.addEventListener('scroll', onScroll, {passive:true});
